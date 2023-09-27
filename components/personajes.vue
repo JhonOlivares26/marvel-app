@@ -6,12 +6,15 @@
             <img :src="hero.thumbnail" :alt="hero.name" class="img-thumbnail">
           </a>
           <h3 class="title">{{ hero.name }}</h3>
+          <h3 >{{ hero.total }}</h3>
         </div>
       </div>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
+  import axios from 'axios';
+  
   export default {
     data() {
       return {
@@ -21,13 +24,13 @@
     mounted() {
       const urlAPI = 'https://gateway.marvel.com:443/v1/public/characters?ts=2&apikey=1af92334b461b82edba5135a94169b1f&hash=442bad013f3ffcf998c84ee9283b8434';
   
-      fetch(urlAPI)
-        .then((res) => res.json())
-        .then((json) => {
-          this.heroes = json.data.results.map((hero) => ({
+      axios.get(urlAPI)
+        .then((response) => {
+          this.heroes = response.data.data.results.map((hero) => ({
             name: hero.name,
+            total: hero.comics.Count,
             thumbnail: `${hero.thumbnail.path}.${hero.thumbnail.extension}`,
-            url: hero.urls[0].url
+            url: hero.name
           }));
         })
         .catch((error) => {
@@ -36,4 +39,12 @@
     }
   };
   </script>
+
+<style>
+img.img-thumbnail{
+  width: 80%;
+  height: 80%;
+}
+</style>
+  
   
